@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Optimization</title>
+</head>
+<body>
+    <h1>Stock Optimization</h1>
+    <form id="stock-form">
+        <label for="stocks">Select Stocks:</label>
+        <select id="stocks" name="stocks" multiple>
+            <option value="GUINESS Returns">GUINESS Returns</option>
+            <option value="UBA Returns">UBA Returns</option>
+            <option value="OANDO Returns">OANDO Returns</option>
+            <option value="FBNH Returns">FBNH Returns</option>
+            <option value="ETI Returns">ETI Returns</option>
+            <option value="CONOIL Returns">CONOIL Returns</option>
+            <option value="WAPCO Returns">WAPCO Returns</option>
+        </select>
+        <br>
+        <label for="risk-free-rate">Risk-Free Rate (%):</label>
+        <input type="number" id="risk-free-rate" name="risk_free_rate" step="0.01">
+        <br>
+        <button type="submit">Optimize</button>
+    </form>
+    <div id="results"></div>
+    <img id="efficient-frontier" style="display:none;" />
+    <img id="weights-pie-chart" style="display:none;" />
+
+    <script>
+        document.getElementById('stock-form').onsubmit = function(event) {
+            event.preventDefault();
+            const selectedStocks = Array.from(document.getElementById('stocks').selectedOptions).map(option => option.value);
+            const riskFreeRate = document.getElementById('risk-free-rate').value;
+            
+            fetch('/optimize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ stocks: selectedStocks, risk_free_rate: riskFreeRate })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('results').innerHTML = `
+                        <p>Return: ${data.return}</p>
+                        <p>Volatility: ${data.volatility}</p>
+                        <p>Sharpe Ratio: ${data.sharpe_ratio}</p>
+                        <p>Weights: ${JSON.stringify(data.weights)}</p>
+                    `;
+                    const timestamp = data.timestamp;
+                    document.getElementById('efficient-frontier').src = '/efficient_frontier?' + timestamp;
+                    document.getElementById('efficient-frontier').style.display = 'block';
+                    document.getElementById('weights-pie-chart').src = '/weights_pie_chart?' + timestamp;
+                    document.getElementById('weights-pie-chart').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    </script>
+</body>
+</html>
