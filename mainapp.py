@@ -3,8 +3,7 @@ import optimization_script
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import io
-import base64
+
 
 
 app = Flask(__name__)
