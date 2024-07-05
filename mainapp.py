@@ -20,7 +20,7 @@ def optimize():
     
     actual_columns = [
         'GUINESS Returns', 'UBA Returns', 'OANDO Returns', 
-        'FBNH Returns', 'ETI Returns', 'CONOIL Returns', 'WAPCO Returns','FIDELITY Returns','UNILEVER Returns','ZENITHB','GTCO'
+        'FBNH Returns', 'ETI Returns', 'CONOIL Returns', 'WAPCO Returns','FIDELITY Returns','UNILEVER Returns','ZENITHB Returns','GTCO Returns',
     ]
     
     if not all(stock in actual_columns for stock in selected_stocks):
